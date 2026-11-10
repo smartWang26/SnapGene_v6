@@ -35,6 +35,14 @@
     .empty { padding: 55px 16px; text-align: center; color: #7a8597; line-height: 1.7; }
     .foot { text-align: center; color: #75829a; font-size: 12px; margin: 26px auto; line-height: 1.8; }
     @media (max-width: 600px) { .hero { padding-top: 44px; } .toolbar { align-items: stretch; } .search { width: 100%; } #files { padding: 0 17px 12px; } .file { gap: 10px; } .file-symbol { width: 40px; height: 44px; } .download { padding: 10px 12px; } }
+  
+    button.download {border:0;cursor:pointer;font:inherit;font-size:14px}
+    dialog {border:1px solid #e6eaf2;border-radius:18px;padding:28px;width:min(520px,calc(100% - 32px));color:#1a2440;box-shadow:0 24px 90px #142a5240}
+    dialog::backdrop {background:#142a5280}
+    dialog h2 {margin-top:0} dialog label {display:block;margin:18px 0 8px;font-weight:600}
+    dialog input,dialog textarea {width:100%;padding:12px;border:1px solid #d6deeb;border-radius:9px;font:inherit;box-sizing:border-box} dialog textarea {resize:vertical}
+    .feedback-actions {display:flex;justify-content:flex-end;gap:12px;margin-top:22px}
+    .feedback-cancel {background:#edf0f5;color:#1a2440}
   </style>
 </head>
 <body>
@@ -87,9 +95,26 @@
     </article></div>
       <div id="no-match" class="empty" hidden>没有找到匹配的文件，请尝试其他关键词。</div>
     </section>
-    <section class="panel" style="margin-top:24px;padding:26px"><h2>问题与反馈</h2><p>遇到下载或使用问题？请描述文件名称、操作步骤和错误信息。</p><a class="download" href="https://github.com/smartWang26/SnapGene_v6/issues/new?title=%5B反馈%5D%20" target="_blank" rel="noopener">提交反馈 ↗</a><p class="summary" style="margin-top:18px">需要 GitHub 登录；反馈公开，请勿填写手机号、密码等隐私信息。也可 <a href="mailto:wang_262026@163.com?subject=SnapGene资源反馈">发送邮件</a>。</p></section><p class="foot">© wang26 · V2<br>下载统计记录按钮点击，不代表文件传输完成。<br><button id="analytics-consent" type="button">允许访问与下载行为统计</button> <span id="analytics-status" role="status">默认未启用统计</span></p>
+    <section class="panel" style="margin-top:24px;padding:26px"><h2>问题与反馈</h2><p>遇到下载或使用问题？请描述文件名称、操作步骤和错误信息。</p><button class="download" id="open-feedback" type="button">填写反馈</button><p class="summary" style="margin-top:18px">无需 GitHub 账号，填写邮箱与反馈内容即可提交给 wang26。</p></section><p class="foot">© wang26 · V2<br>下载统计记录按钮点击，不代表文件传输完成。<br><button id="analytics-consent" type="button">允许访问与下载行为统计</button> <span id="analytics-status" role="status">默认未启用统计</span></p>
   </main>
+  <dialog id="feedback-dialog" aria-labelledby="feedback-title">
+    <h2 id="feedback-title">问题与反馈</h2><p class="summary">告诉我您遇到的问题，我会通过邮箱与您联系。</p>
+    <form action="https://formsubmit.co/wang_262026@163.com" method="POST">
+      <input type="hidden" name="_subject" value="SnapGene 网页反馈 · wang26">
+      <input type="hidden" name="_template" value="table">
+      <label for="feedback-email">您的邮箱</label>
+      <input id="feedback-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="用于接收回复">
+      <label for="feedback-message">反馈内容</label>
+      <textarea id="feedback-message" name="message" rows="6" minlength="5" maxlength="5000" required placeholder="请描述文件名称、操作步骤或建议（5–5000 字）"></textarea>
+      <p class="summary" style="margin-top:16px">点击提交即将邮箱和反馈内容通过 FormSubmit 转发至 wang_262026@163.com，请勿填写密码等敏感信息。提交后可能需要完成服务方验证。</p>
+      <div class="feedback-actions"><button class="download feedback-cancel" id="close-feedback" type="button">取消</button><button class="download" type="submit">提交反馈</button></div>
+    </form>
+  </dialog>
   <script>
+    const feedbackDialog = document.getElementById('feedback-dialog');
+    document.getElementById('open-feedback').addEventListener('click', () => feedbackDialog.showModal());
+    document.getElementById('close-feedback').addEventListener('click', () => feedbackDialog.close());
+
     const search = document.getElementById('search');
     const items = Array.from(document.querySelectorAll('.file'));
     const count = document.getElementById('count');
