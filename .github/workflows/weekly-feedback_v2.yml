@@ -1,0 +1,19 @@
+name: Weekly feedback v2
+on:
+  schedule:
+    - cron: '17 1 * * 1'
+  workflow_dispatch:
+permissions:
+  issues: read
+  contents: read
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send weekly digest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 scripts/weekly_feedback_v2.py
